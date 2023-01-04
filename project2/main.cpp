@@ -2,6 +2,7 @@
 #include <GL/glu.h>
 #include <GL/glut.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <windows.h>
 #include <math.h>
 #include<iostream>
@@ -10,6 +11,8 @@
 float xRotated = 90.0, yRotated = 0.0, zRotated = 0.0;
 float angle_player_1=0.0;
 float angle_player_2=0.0;
+static char score_1[20], score_2[20];
+int player1_score = 0, player2_score = 0;
 
 
 //------------------------------  KeyBoardFunc  ---------------------------------
@@ -46,6 +49,36 @@ void keyBoard(unsigned char key,int x,int y){
     glutPostRedisplay();
 }
 
+//----------------------------- draw text on screen ----------------------------
+void drawStrokeText(char*string, int x, int y, int z)
+{
+    char *c;
+    glPushMatrix();
+    //glTranslatef(x, y+8,z);
+    // glScalef(0.09f,-0.08f,z);
+    for (c=string; *c != '\0'; c++)
+    {
+        glutStrokeCharacter(GLUT_STROKE_ROMAN , *c);
+    }
+    glPopMatrix();
+}
+
+//------------------------------  ScoreFunc  ---------------------------------
+
+void scoreFunc(){
+    // draw the score on the left for player 1
+    snprintf (score_1, sizeof(score_1), "%d", player1_score);
+    drawStrokeText(score_1, -3, 8, 0);
+
+    // draw the score on the left for player 2
+    snprintf (score_2, sizeof(score_2), "%d", player2_score);
+    drawStrokeText(score_2, 3, 8, 0);
+
+    // swap the current frame with the drawn frame
+ glutPostRedisplay();
+   // glutSwapBuffers();
+    //glFlush();
+}
 //------------------------------  SoundFunc  ---------------------------------
 
 void Sound(){
@@ -65,13 +98,12 @@ void reshapeFunc (int w, int h)
     glMatrixMode(GL_MODELVIEW);
 }
 //------------------------------  TableFunc  ---------------------------------
-void Table()
-{
+void Table(){
     glTranslatef (0.0,-1,-15.0);
     gluLookAt(0,3,2,0,0,0,0,1,0);
    // glRotatef(40,0,1,0);
    // glRotatef(zRotated,0,1,0);
-
+glColor3f(0.0,0.8,0.4);
     glPushMatrix();
     glScalef(1.5,0.05,1);//for make the table
     glutSolidCube(6.0);
@@ -90,17 +122,19 @@ void Table()
     glScalef(0.05,1.5,0.05);//for make the table
     glutSolidCube(6.0);
     glPopMatrix();
+
 //right player
-glPushMatrix();
 glTranslatef(0,0,angle_player_1);
+glColor3f(0.0,0.0,1.0);
     glPushMatrix();
     glTranslatef(4.5,0.5,0);
     glRotatef(90,1,0,0);
     glScalef(0.2,1,0.2);//for make the table
     glutSolidCube(1.0);
     glPopMatrix();
-glPopMatrix();
+
 //left player
+glColor3f(1.0,0.0,0.0);
     glPushMatrix();
     glTranslatef(-4.5,0.5,0);
     glRotatef(90,1,0,0);
@@ -112,7 +146,7 @@ glPopMatrix();
 
 void ball(){
 
-    //glColor3f(0,1,0);
+    glColor3f(0.9,0.9,0.3);
      glPushMatrix();
     glutSolidSphere (0.3, 30, 30);
     glPopMatrix();
@@ -120,7 +154,7 @@ void ball(){
 //------------------------------  cubeFunc  ---------------------------------
 
 void CubeFunc(){
-
+    //glRotatef(.1,0,0,1);
     glPushMatrix();
     //glTranslatef(0,4.5,-0.5);
 
@@ -199,7 +233,7 @@ void CubeFunc(){
 void StarFunc(){
     //glRotatef       (0.1,1,1,0);
 
-
+glColor3f(0.9,0.9,0.3);
 glPushMatrix();
 glTranslatef(4,7,0);
 //1st  side
@@ -207,7 +241,7 @@ glTranslatef(4,7,0);
     glTranslatef(0,0.5,0);
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
+   // glColor3f(1.0,0.0,0.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,-0.5);
@@ -216,7 +250,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,0.0);
+    //glColor3f(0.0,1.0,0.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -225,7 +259,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,1.0);
+   // glColor3f(0.0,0.0,1.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(-0.5,-0.5,0.5);
@@ -234,7 +268,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,0.0);
+   // glColor3f(0.0,0.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -244,7 +278,7 @@ glTranslatef(4,7,0);
 
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,1.0,0.0);
+   // glColor3f(1.0,1.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -253,7 +287,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,1.0);
+   // glColor3f(0.0,1.0,1.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(-0.5,-0.5,-0.5);
@@ -270,7 +304,7 @@ glTranslatef(4,7,0);
     glRotatef(180,0,0,1);
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
+   // glColor3f(1.0,0.0,0.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,-0.5);
@@ -279,7 +313,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,0.0);
+    //glColor3f(0.0,1.0,0.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -288,7 +322,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,1.0);
+  //  glColor3f(0.0,0.0,1.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(-0.5,-0.5,0.5);
@@ -297,7 +331,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,0.0);
+  //  glColor3f(0.0,0.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -307,7 +341,7 @@ glTranslatef(4,7,0);
 
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,1.0,0.0);
+  //  glColor3f(1.0,1.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -316,7 +350,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,1.0);
+  //  glColor3f(0.0,1.0,1.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(-0.5,-0.5,-0.5);
@@ -333,7 +367,7 @@ glTranslatef(4,7,0);
     glRotatef(90,0,0,1);
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
+   // glColor3f(1.0,0.0,0.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,-0.5);
@@ -342,7 +376,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,0.0);
+   // glColor3f(0.0,1.0,0.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -351,7 +385,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,1.0);
+  //  glColor3f(0.0,0.0,1.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(-0.5,-0.5,0.5);
@@ -360,7 +394,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,0.0);
+    //glColor3f(0.0,0.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -370,7 +404,7 @@ glTranslatef(4,7,0);
 
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,1.0,0.0);
+  //  glColor3f(1.0,1.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -379,7 +413,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,1.0);
+   // glColor3f(0.0,1.0,1.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(-0.5,-0.5,-0.5);
@@ -395,7 +429,7 @@ glTranslatef(4,7,0);
     glRotatef(-90,0,0,1);
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,0.0,0.0);
+  //  glColor3f(1.0,0.0,0.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,-0.5);
@@ -404,7 +438,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,0.0);
+    //glColor3f(0.0,1.0,0.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -413,7 +447,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,1.0);
+   // glColor3f(0.0,0.0,1.0);
 
     glVertex3f(-0.5,-0.5,-0.5);
     glVertex3f(-0.5,-0.5,0.5);
@@ -422,7 +456,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,0.0,0.0);
+    //glColor3f(0.0,0.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -432,7 +466,7 @@ glTranslatef(4,7,0);
 
 
     glBegin(GL_POLYGON);
-    glColor3f(1.0,1.0,0.0);
+  //  glColor3f(1.0,1.0,0.0);
 
     glVertex3f(0.5,-0.5,-0.5);
     glVertex3f(0.5,-0.5,0.5);
@@ -441,7 +475,7 @@ glTranslatef(4,7,0);
     glEnd();
 
     glBegin(GL_POLYGON);
-    glColor3f(0.0,1.0,1.0);
+   // glColor3f(0.0,1.0,1.0);
 
     glVertex3f(-0.5,-0.5,0.5);
     glVertex3f(-0.5,-0.5,-0.5);
@@ -457,35 +491,36 @@ glTranslatef(4,7,0);
 
 //------------------------------  cloudFunc  ---------------------------------
 void cloud (){
-
+//cloud 1
+glColor3f(1.0,1.0,1.0);
     glPushMatrix();
-    glTranslatef(0,7,0);
+    glTranslatef(-3,7,0);
     glutSolidSphere (0.7, 30, 30);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-0.7,7,0);
+    glTranslatef(-3.7,7,0);
    glutSolidSphere (0.7, 30, 30);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-1.4,7,0);
+    glTranslatef(-4.4,7,0);
    glutSolidSphere (0.7, 30, 30);
     glPopMatrix();
 
 //cloud 2
     glPushMatrix();
-    glTranslatef(0,8,0);
+    glTranslatef(-1,8,0);
    glutSolidSphere (0.6, 30, 30);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(0.7,8,0);
+    glTranslatef(-1.7,8,0);
    glutSolidSphere (0.6, 30, 30);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(1.4,8,0);
+    glTranslatef(-2.4,8,0);
    glutSolidSphere (0.6, 30, 30);
     glPopMatrix();
 
@@ -511,15 +546,16 @@ void display (void)
 
        glPushMatrix();
        glTranslatef(0,4.5,-0.5);
+       glRotatef(.1,0,0,1);
        CubeFunc();
        glPopMatrix();
-
+scoreFunc();
        glPushMatrix();
        StarFunc();
        glPopMatrix();
 
-    //glutSwapBuffers();
-    //glutPostRedisplay();
+    glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 //--------------------------------  idleFunc  ----------------------------------
@@ -587,7 +623,7 @@ int main (int argc, char **argv)
     glutReshapeFunc (reshapeFunc);
     glutDisplayFunc (display);
 //    glutIdleFunc    (idleFunc);
-   glClearColor(0,1,1,1); //COLOR FOR THE PACKGROUND
+   glClearColor(0,0.2,0.4,1); //COLOR FOR THE PACKGROUND
     texture(); // Lighting and textures
     Sound();
 
